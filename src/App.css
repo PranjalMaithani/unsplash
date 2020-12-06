@@ -4,10 +4,10 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
   justify-items: space-evenly;
-  width: 1000px;
+  max-width: 1320px;
   margin: auto;
 }
 
@@ -24,31 +24,31 @@
   grid-auto-flow: dense;
 }  */
 
+.unsplashImage {
+margin-bottom: 24px;
+}
+
 .container {
   display: flex;
   flex-direction: column;
 }
 
 .test {
-  margin-bottom: 10px;
+  margin-bottom: 24px;
 }
 
 .test1 {
   background-color: violet;
-  border: 1px solid black;
 }
 
 .test2 {
   background-color: purple;
-  border: 2px solid black;
 }
 
 .test3 {
   background-color: blueviolet;
-  border: 2px solid black;
 }
 
 .test4 {
   background-color: darkred;
-  border: 1px solid black;
 }
