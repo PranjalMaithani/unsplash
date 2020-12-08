@@ -1,27 +1,38 @@
 import './App.css';
 import React from 'react';
 
-import { createApi } from 'unsplash-js';
 const accessKey = "hHYInPsQTpB1kZfbJhhnoq0y1CyB8h6TzStfcD_rf44";
 const endpoint = "https://api.unsplash.com/photos";
 
 
 function App() {
   const gridRef = React.useRef();
-  const [gridHeight, setGridHeight] = React.useState(5000);
+  const [gridHeight, setGridHeight] = React.useState(5600);
   const [rowGap, setRowGap] = React.useState(10);
+
   const [photosArray, setPhotoArray] = React.useState([]);
+
   const [columnLeft, setColumnLeft] = React.useState([]);
   const [columnMid, setColumnMid] = React.useState([]);
   const [columnRight, setColumnRight] = React.useState([]);
 
+  const [columnLeftRelated, setColumnLeftRelated] = React.useState([]);
+  const [columnMidRelated, setColumnMidRelated] = React.useState([]);
+  const [columnRightRelated, setColumnRightRelated] = React.useState([]);
+
+
   React.useEffect(() => {
-    //setGridHeight(parseInt(window.getComputedStyle(gridRef.current).getPropertyValue('height')));
     fetchPhotos();
   }, []);
 
   React.useEffect(() => {
-    assignColumn();
+    assignColumns(
+      [
+        (v) => setColumnLeft(v),
+        (v) => setColumnMid(v),
+        (v) => setColumnRight(v),
+      ], photosArray, 416, gridHeight, rowGap);
+
   }, [photosArray]);
 
   async function fetchPhotos() {
@@ -33,13 +44,6 @@ function App() {
     const result = await fetchedPhotos.json();
     setPhotoArray(result);
   }
-
-  // function RenderSquare({ h }) {
-  //   let w = 416;
-  //   let c = Math.floor(Math.random() * 4) + 1;
-  //   return (<div className={`test test${c}`} style={{ width: `${w}px`, height: `${h}px` }}>
-  //   </div>);
-  // }
 
   function RenderImage({ url, height }) {
     let w = 416;
@@ -54,67 +58,58 @@ function App() {
     </div>);
   }
 
-  // function Container(props) {
-  //   let heightBudget = gridHeight;
-  //   console.log(heightBudget);
-  //   let h = 0;
-  //   let arr = [];
-  //   while (heightBudget > h) {
-  //     h = Math.floor(Math.random() * 500) + 10;
-  //     heightBudget -= (rowGap + h);
-  //     arr.push(RenderSquare({ h }))
-  //   }
-  //   console.log(heightBudget);
-  //   return (
-  //     <div>
-  //       {arr}
-  //     </div>
-  //   );
-  // }
-
-  function assignColumnImages(current, assignerFunction) {
-
-    let heightBudget = gridHeight;
-    let h = 0;
-    let arr = [];
-    while (heightBudget > h && photosArray[current] !== undefined) {
-      let imageUrl = photosArray[current].urls.regular;
-      h = (photosArray[current].height / photosArray[current].width) * 416;
-      heightBudget -= (h + rowGap);
-      arr.push(RenderImage({ height: h, url: imageUrl }));
-      current++;
-      if (photosArray[current])
-        h = (photosArray[current].height / photosArray[current].width) * 416;
-    }
-    assignerFunction(arr);
-    return current;
+  function previewHeight(image, imageWidth) {
+    return (image.height / image.width) * imageWidth;
   }
 
-  function assignColumn() {
-    let counter = 0;
-    if (!photosArray.length)
+  function assignColumns(setterFunctions, dataArray, imageWidth, heightBudget, gap) {
+    if (!dataArray.length)
       return;
 
-    counter = assignColumnImages(counter, (v) => setColumnLeft(v));
-    counter = assignColumnImages(counter, (v) => setColumnMid(v));
-    counter = assignColumnImages(counter, (v) => setColumnRight(v));
+    let allColumns = [[], [], []];
 
+    let current = 0;
+    let currentImage = dataArray[current];
+    let numberOfColumns = allColumns.length;
+    let remainingHeightBudget = Array(numberOfColumns).fill(heightBudget);
+    while (dataArray[current] && remainingHeightBudget.some(num => num > previewHeight(currentImage, imageWidth))) {
+      allColumns.forEach((column, index) => {
+
+        if (currentImage) {
+          const h = previewHeight(currentImage, imageWidth);
+          if (remainingHeightBudget[index] > h) {
+            column.push(currentImage);
+            remainingHeightBudget[index] -= (h + gap);
+            current++;
+            currentImage = dataArray[current];
+          }
+        }
+
+      });
+    }
+    setterFunctions.forEach((setter, index) => setter(allColumns[index]));
+    setGridHeight(parseInt(window.getComputedStyle(gridRef.current).getPropertyValue('height')));
   }
 
   function Container({ currentArray }) {
-    if (!photosArray.length) {
-      return null;
-    }
 
     return (
-      <div>
-        {currentArray}
+      <div className="container">
+        {currentArray.map(obj => {
+          return <img key={obj.id}
+            src={obj.urls.regular}
+            className="unsplashImage"
+            style={{ "max-width": `416px`, height: `${previewHeight(obj, 416)}` }}
+            alt={obj["alt_description"]}
+          />
+        })}
       </div>
     );
   }
 
   return (
     <Grid>
+
       <Container currentArray={columnLeft} />
       <Container currentArray={columnMid} />
       <Container currentArray={columnRight} />
