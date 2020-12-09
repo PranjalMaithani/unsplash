@@ -5,27 +5,19 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 12px;
+  gap: 24px;
   justify-items: space-evenly;
   max-width: 1320px;
   margin: auto;
+  overflow-y: auto;
 }
-
-/* .grid {
-  display: grid;
-  row-gap: 5px;
-  width: 900px;
-  max-width: 1000px;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
-  grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: 20px;
-  margin: auto;
-  justify-items: center;
-  grid-auto-flow: dense;
-}  */
 
 .unsplashImage {
 margin-bottom: 24px;
+width: 100%;
+box-sizing: border-box;
+object-fit: cover;
+height: 100%;
 }
 
 .container {
@@ -33,4 +25,12 @@ margin-bottom: 24px;
   flex-direction: column;
 
   max-width: 416px;
+}
+
+.containerGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(250px,1fr));
+  gap: 24px;
+  max-width: 1320px;
+  margin: auto;
 }
