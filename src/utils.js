@@ -39,7 +39,7 @@ export const useImageLazyLoad = () => {
           }
         });
       },
-      { threshold: 0.25 }
+      { threshold: 0.15 }
     );
     ob.observe(node);
   }, []);

@@ -80,7 +80,7 @@ function App() {
       <div ref={gridRef} style={{ minHeight: 1600, width: "100%" }}>
         <ContainerGrid
           currentArray={columns}
-          imageWidth={IMAGE_WIDTH}
+          maxImageWidth={IMAGE_WIDTH}
           gridGap={COLUMN_GAP}
         />
       </div>
