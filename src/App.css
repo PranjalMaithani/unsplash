@@ -25,6 +25,5 @@
 .container {
   display: flex;
   flex-direction: column;
-  max-width: 416px;
   width: auto;
 }

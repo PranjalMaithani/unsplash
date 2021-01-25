@@ -6,11 +6,13 @@ import { ContainerGrid } from "./components.js";
 import { fetchPhotos } from "./utils/fetchData";
 import { useResize } from "./utils/handlers";
 
-const IMAGE_WIDTH = 416;
+const IMAGE_WIDTH_3COLUMNS = 416;
+const IMAGE_WIDTH_2COLUMNS = 463;
+
 const HEIGHT_PER_COLUMN = 2600;
 const ROW_GAP = 10;
 const COLUMN_GAP = 24;
-const TWO_COLUMNS_SCREEN_WIDTH = 950;
+const TWO_COLUMNS_SCREEN_WIDTH = 975;
 
 function App() {
   let fetching = React.useRef(true);
@@ -23,6 +25,9 @@ function App() {
 
   const [columnHeight, setColumnHeight] = React.useState(HEIGHT_PER_COLUMN);
   const [numberOfColumns, setNumberOfColumns] = React.useState(3);
+  const [maxImageWidth, setMaxImageWidth] = React.useState(
+    IMAGE_WIDTH_3COLUMNS
+  );
 
   const [columns, setColumns] = React.useState([]);
 
@@ -46,8 +51,10 @@ function App() {
   React.useEffect(() => {
     if (screenWidth > TWO_COLUMNS_SCREEN_WIDTH) {
       setNumberOfColumns(3);
+      setMaxImageWidth(IMAGE_WIDTH_3COLUMNS);
     } else {
       setNumberOfColumns(2);
+      setMaxImageWidth(IMAGE_WIDTH_2COLUMNS);
     }
 
     if (photosArray.length !== 0) {
@@ -56,7 +63,7 @@ function App() {
           photosArray,
           numberOfColumns,
           columnHeight,
-          IMAGE_WIDTH,
+          IMAGE_WIDTH: IMAGE_WIDTH_3COLUMNS,
           ROW_GAP,
         })
       );
@@ -80,7 +87,7 @@ function App() {
       <div ref={gridRef} style={{ minHeight: 1600, width: "100%" }}>
         <ContainerGrid
           currentArray={columns}
-          maxImageWidth={IMAGE_WIDTH}
+          maxImageWidth={maxImageWidth}
           gridGap={COLUMN_GAP}
         />
       </div>
