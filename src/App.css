@@ -12,23 +12,18 @@
   overflow-y: auto;
 }
 
+.image {
+  margin-bottom: 24px;
+}
+
 .unsplashImage {
-margin-bottom: 24px;
-width: 100%;
-box-sizing: border-box;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .container {
   display: flex;
   flex-direction: column;
-
   max-width: 416px;
-}
-
-.containerGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(250px,1fr));
-  gap: 24px;
-  max-width: 1320px;
-  margin: auto;
+  width: auto;
 }
