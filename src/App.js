@@ -8,11 +8,14 @@ import { useResize } from "./utils/handlers";
 
 const IMAGE_WIDTH_3COLUMNS = 416;
 const IMAGE_WIDTH_2COLUMNS = 463;
+const IMAGE_WIDTH_1COLUMN = 760;
 
 const HEIGHT_PER_COLUMN = 2600;
 const ROW_GAP = 10;
 const COLUMN_GAP = 24;
+
 const TWO_COLUMNS_SCREEN_WIDTH = 975;
+const ONE_COLUMN_SCREEN_WIDTH = 765;
 
 function App() {
   let fetching = React.useRef(true);
@@ -52,9 +55,12 @@ function App() {
     if (screenWidth > TWO_COLUMNS_SCREEN_WIDTH) {
       setNumberOfColumns(3);
       setMaxImageWidth(IMAGE_WIDTH_3COLUMNS);
-    } else {
+    } else if (screenWidth > ONE_COLUMN_SCREEN_WIDTH) {
       setNumberOfColumns(2);
       setMaxImageWidth(IMAGE_WIDTH_2COLUMNS);
+    } else {
+      setNumberOfColumns(1);
+      setMaxImageWidth(IMAGE_WIDTH_1COLUMN);
     }
 
     if (photosArray.length !== 0) {
