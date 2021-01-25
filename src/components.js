@@ -58,9 +58,13 @@ export function ContainerGrid({ currentArray, maxImageWidth, gridGap }) {
 
   useEffect(() => {
     if (gridRef.current) {
-      setCurrentWidth(
-        gridRef.current.clientWidth / currentArray.length - gridGap
-      ); //for fullscreen = 1320/3 => 440 => 440 - 26 = 416
+      const newWidth =
+        gridRef.current.clientWidth / currentArray.length - gridGap;
+      if (newWidth > maxImageWidth) {
+        setCurrentWidth(maxImageWidth);
+      } else {
+        setCurrentWidth(newWidth); //for fullscreen = 1320/3 => 440 => 440 - 26 = 416
+      }
     }
   }, [gridGap, screenWidth, currentArray, maxImageWidth]);
 
