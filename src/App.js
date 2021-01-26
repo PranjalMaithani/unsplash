@@ -1,8 +1,8 @@
 import "./App.css";
 import React from "react";
 import { useInfiniteScroll } from "./utils";
-import { masonryColumns } from "./masonry.js";
-import { ContainerGrid } from "./components.js";
+import { masonryColumns } from "./utils/masonry.js";
+import { ContainerGrid } from "./components/Grid.js";
 import { fetchPhotos } from "./utils/fetchData";
 import { useResize } from "./utils/handlers";
 
@@ -22,7 +22,6 @@ function App() {
 
   let screenWidth = useResize(1000);
 
-  const gridRef = React.useRef(null);
   const [photosArray, setPhotoArray] = React.useState([]);
   const [page, setPage] = React.useState(1);
 
@@ -89,8 +88,8 @@ function App() {
   useInfiniteScroll(infiniteLoadRef, updatePage);
 
   return (
-    <div>
-      <div ref={gridRef} style={{ minHeight: 1600, width: "100%" }}>
+    <>
+      <div style={{ minHeight: 1600, width: "100%" }}>
         <ContainerGrid
           currentArray={columns}
           maxImageWidth={maxImageWidth}
@@ -103,7 +102,7 @@ function App() {
         ref={infiniteLoadRef}
       ></div>
       <footer>End</footer>
-    </div>
+    </>
   );
 }
 

@@ -52,19 +52,3 @@ export const useImageLazyLoad = () => {
 
   return [visibleState, imageRef];
 };
-
-export const useHookWithRefCallback = (callback) => {
-  const ref = useRef(null);
-  const setRef = useCallback(
-    (node) => {
-      if (ref.current) {
-        callback();
-      }
-
-      ref.current = node;
-    },
-    [callback]
-  );
-
-  return [setRef];
-};

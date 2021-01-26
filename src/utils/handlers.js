@@ -34,12 +34,3 @@ export const useResize = (limit) => {
 
   return windowWidth;
 };
-
-export function createModal(divId) {
-  const checkElement = document.getElementById(divId);
-  if (!checkElement) {
-    let element = document.createElement("div");
-    element.setAttribute("id", divId);
-    document.body.appendChild(element);
-  }
-}
