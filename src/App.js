@@ -5,6 +5,8 @@ import { masonryColumns } from "./utils/masonry.js";
 import { ContainerGrid } from "./components/Grid.js";
 import { fetchPhotos } from "./utils/fetchData";
 import { useResize } from "./utils/handlers";
+import { Header } from "./components/Header";
+import { GlobalStyle } from "./styles/Global";
 
 const IMAGE_WIDTH_3COLUMNS = 416;
 const IMAGE_WIDTH_2COLUMNS = 463;
@@ -89,7 +91,8 @@ function App() {
 
   return (
     <>
-      <div style={{ minHeight: 1600, width: "100%" }}>
+      <Header />
+      <div style={{ minHeight: 1600 }}>
         <ContainerGrid
           currentArray={columns}
           maxImageWidth={maxImageWidth}
@@ -101,6 +104,8 @@ function App() {
         style={{ border: "1px solid transparent" }}
         ref={infiniteLoadRef}
       ></div>
+
+      <GlobalStyle />
       <footer>End</footer>
     </>
   );

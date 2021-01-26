@@ -11,7 +11,7 @@ const ModalOuter = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 10;
+  z-index: 55;
   overflow-y: auto;
   display: flex;
   justify-content: center;
@@ -26,6 +26,7 @@ const ModalInner = styled.div`
   background-color: white;
   height: 1500px;
   width: 75vw;
+  margin-top: 30px;
   display: flex;
   justify-content: center;
 `;
@@ -38,6 +39,7 @@ const ImageZoomedOut = {
 const ImageZoomedIn = {
   padding: "0",
   margin: "0",
+  overflow: "hidden",
 };
 
 const ModalImage = ({ image, clickCallback, isLarge }) => {
