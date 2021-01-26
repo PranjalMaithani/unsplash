@@ -56,7 +56,7 @@ const ModalImage = ({ image, clickCallback, isLarge }) => {
         src={image.urls.regular}
         alt={image.alt_description}
         onClick={clickCallback}
-        style={{ width: 400 }}
+        style={{ maxHeight: "80vh", width: "100%", minHeight: "333px" }}
       />
     );
   }
