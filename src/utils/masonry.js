@@ -11,7 +11,6 @@ function shortestColumnDifference(columns) {
 export function masonryColumns({
   photosArray,
   numberOfColumns,
-  columnHeight,
   IMAGE_WIDTH,
   ROW_GAP,
 }) {
@@ -24,16 +23,8 @@ export function masonryColumns({
 
   let current = 0;
   let currentImage = photosArray[current];
-  let remainingHeightBudget = Array(numberOfColumns).fill(columnHeight);
   /* eslint-disable */
-  while (
-    photosArray[current] &&
-    remainingHeightBudget.some(
-      (num) =>
-        num >
-        resizedHeight(currentImage.width, currentImage.height, IMAGE_WIDTH)
-    )
-  ) {
+  while (photosArray[current]) {
     allColumns.forEach((column, index) => {
       if (currentImage) {
         let shortest = shortestColumnDifference(HeightsArray);
@@ -42,10 +33,9 @@ export function masonryColumns({
           currentImage.height,
           IMAGE_WIDTH
         );
-        if (remainingHeightBudget[index] > height && shortest === index) {
+        if (shortest === index) {
           column.push(currentImage);
           HeightsArray[index] += height;
-          remainingHeightBudget[index] -= height + ROW_GAP;
           current++;
           currentImage = photosArray[current];
         }

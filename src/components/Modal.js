@@ -1,7 +1,10 @@
 import styled from "styled-components";
 import ReactDOM from "react-dom";
-import { createModal, useClickOutside } from "../utils/lib";
+import { createModal, useClickOutside, useResize } from "../utils/lib";
+import { fetchPhotosSearch } from "../utils/fetchData";
+import { masonryColumns } from "../utils/masonry";
 import { useState, useEffect, useRef } from "react";
+import { ContainerGrid } from "./Grid";
 
 const ModalOuter = styled.div`
   width: 100vw;
@@ -69,6 +72,19 @@ export const Modal = ({ disableModal, image }) => {
   createModal(modalId);
 
   const [isLargeImage, setIsLargeImage] = useState(false);
+  // const [photosArray, setPhotoArray] = useState([]); //for related images in a modal
+  // const [columns, setColumns] = useState([]);
+
+  // let screenWidth = useResize(1000);
+
+  // useEffect(() => {
+  //   const getPhotos = async (searchText) => {
+  //     const photos = await fetchPhotosSearch(1, searchText);
+  //     setPhotoArray(photos);
+  //   };
+
+  //   getPhotos(image.description || image.alt_description);
+  // }, [image]);
 
   useEffect(() => {
     const cancelAllActions = (event) => {

@@ -32,11 +32,11 @@ export function Image({ image, IMAGE_WIDTH }) {
             left: 0,
             zIndex: 5,
           }}
-          alt={image["alt_description"]}
+          alt={image.description || image.alt_description}
         />
       )}
       <Blurhash
-        alt={image["alt_description"]}
+        alt={image.description || image.alt_description}
         hash={image.blur_hash}
         className="unsplashImage blurHash"
         style={{
