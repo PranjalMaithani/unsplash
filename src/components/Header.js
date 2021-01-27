@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { faSearch, faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 
+import { useCallback } from "react";
+
 const HeaderDiv = styled.div`
   width: 100vw;
   position: fixed;
@@ -89,26 +91,46 @@ const SearchInput = styled.input`
   }
 `;
 
-export const Header = () => {
+export const Header = ({ searchCallback, resetData }) => {
+  const searchSubmit = useCallback(
+    (event) => {
+      event.preventDefault();
+      const value = event.currentTarget.input.value;
+      if (value !== "") {
+        searchCallback(value);
+      }
+    },
+    [searchCallback]
+  );
+
   return (
     <HeaderDiv>
       <Logo
         children={
           <FontAwesomeIcon icon={faCircleNotch} style={{ fontSize: "35px" }} />
         }
+        onClick={resetData}
       />
       <SearchBarDiv>
-        <SearchBarForm>
+        <SearchBarForm
+          onSubmit={(event) => {
+            searchSubmit(event);
+          }}
+        >
           <SearchButton
             children={
               <FontAwesomeIcon icon={faSearch} style={{ fontSize: "15px" }} />
             }
             type="submit"
           />
-          <SearchInput placeholder="Search photos" />
+          <SearchInput
+            placeholder="Search photos"
+            name="input"
+            autoComplete="off"
+          />
         </SearchBarForm>
       </SearchBarDiv>
-      <HeaderRightEnd>ONSPLASH</HeaderRightEnd>
+      <HeaderRightEnd onClick={resetData}>ONSPLASH</HeaderRightEnd>
     </HeaderDiv>
   );
 };

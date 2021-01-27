@@ -3,7 +3,9 @@ import React from "react";
 import { useInfiniteScroll } from "./utils";
 import { masonryColumns } from "./utils/masonry.js";
 import { ContainerGrid } from "./components/Grid.js";
-import { fetchPhotos } from "./utils/fetchData";
+import ErrorMessage from "./components/ErrorMessage";
+import { fetchPhotos, fetchPhotosSearch } from "./utils/fetchData";
+import { removeDulpicateImages } from "./utils/lib";
 import { useResize } from "./utils/handlers";
 import { Header } from "./components/Header";
 import { GlobalStyle } from "./styles/Global";
@@ -19,6 +21,8 @@ const COLUMN_GAP = 24;
 const TWO_COLUMNS_SCREEN_WIDTH = 975;
 const ONE_COLUMN_SCREEN_WIDTH = 765;
 
+const HEADER_HEIGHT = 62;
+
 function App() {
   let fetching = React.useRef(true);
 
@@ -26,6 +30,8 @@ function App() {
 
   const [photosArray, setPhotoArray] = React.useState([]);
   const [page, setPage] = React.useState(1);
+  const [searchText, setSearchText] = React.useState("");
+  const [errorMessage, setErrorMessage] = React.useState(null);
 
   const [columnHeight, setColumnHeight] = React.useState(HEIGHT_PER_COLUMN);
   const [numberOfColumns, setNumberOfColumns] = React.useState(3);
@@ -38,19 +44,34 @@ function App() {
   const infiniteLoadRef = React.useRef(null);
 
   React.useEffect(() => {
-    const getPhotos = async () => {
-      const nextPhotos = await fetchPhotos(page);
+    const getPhotos = async (searchText) => {
+      let nextPhotos;
+      if (searchText === "") {
+        nextPhotos = await fetchPhotos(page);
+      } else {
+        nextPhotos = await fetchPhotosSearch(page, searchText);
+      }
+      if (page === 1) {
+        if (nextPhotos.length === 0) {
+          setErrorMessage("Couldn't find any photos");
+          setPhotoArray([]);
+          setColumns([]);
+        } else {
+          setErrorMessage(null);
+        }
+        setPhotoArray(nextPhotos);
+        window.scrollTo(0, 0);
+      } else {
+        setPhotoArray((prevPhotos) =>
+          removeDulpicateImages(prevPhotos, nextPhotos)
+        );
+      }
 
-      setPhotoArray((prevPhotos) => {
-        const filteredPhotos = nextPhotos.filter((current) => {
-          return !prevPhotos.some((checkPhoto) => checkPhoto.id === current.id);
-        });
-        return [...prevPhotos, ...filteredPhotos];
-      });
       fetching.current = false;
     };
-    getPhotos();
-  }, [page]);
+
+    getPhotos(searchText);
+  }, [page, searchText]);
 
   React.useEffect(() => {
     if (screenWidth > TWO_COLUMNS_SCREEN_WIDTH) {
@@ -87,12 +108,29 @@ function App() {
     }
   };
 
+  const resetData = () => {
+    setColumnHeight(HEIGHT_PER_COLUMN);
+    setErrorMessage(null);
+    setColumns([]);
+    setSearchText("");
+    setPage(1);
+  };
+
   useInfiniteScroll(infiniteLoadRef, updatePage);
 
   return (
     <>
-      <Header />
-      <div style={{ minHeight: 1600 }}>
+      <Header
+        height={HEADER_HEIGHT}
+        resetData={resetData}
+        searchCallback={(value) => {
+          setPage(1);
+          setSearchText(value);
+        }}
+      />
+      <div style={{ height: HEADER_HEIGHT * 1.5 }}></div>
+      {errorMessage && <ErrorMessage message={errorMessage} />}
+      <div style={{ minHeight: errorMessage ? 100 : 1600 }}>
         <ContainerGrid
           currentArray={columns}
           maxImageWidth={maxImageWidth}

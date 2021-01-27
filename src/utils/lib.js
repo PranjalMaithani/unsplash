@@ -23,3 +23,10 @@ export function useClickOutside(innerRef, callback) {
     };
   }, [callback, innerRef]);
 }
+
+export const removeDulpicateImages = (prevPhotos, nextPhotos) => {
+  const filteredPhotos = nextPhotos.filter((current) => {
+    return !prevPhotos.some((checkPhoto) => checkPhoto.id === current.id);
+  });
+  return [...prevPhotos, ...filteredPhotos];
+};
