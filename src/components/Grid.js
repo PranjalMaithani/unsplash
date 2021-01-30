@@ -8,10 +8,10 @@ export function ContainerGrid({
   rowGap,
   columnGap,
   minColumns,
-  maxColumns,
   screenWidths,
   imageWidths,
 }) {
+  //to ensure the blurhash gets the same width/height as the image (blurhash width/height are specified rigidly by javascript only)
   const [maxImageWidth, setMaxImageWidth] = useState(
     imageWidths[imageWidths.length - 1]
   );
@@ -19,7 +19,9 @@ export function ContainerGrid({
     imageWidths[imageWidths.length - 1]
   );
   const [columns, setColumns] = useState([]);
-  const [numberOfColumns, setNumberOfColumns] = useState(maxColumns);
+  const [numberOfColumns, setNumberOfColumns] = useState(
+    imageWidths.length - 1
+  );
 
   const gridRef = useRef();
   let screenWidth = useResize(100);
@@ -30,14 +32,14 @@ export function ContainerGrid({
     //image widths = width of images corresponding to the screen widths
     for (let i = 0; i < screenWidths.length; i++) {
       if (screenWidth < screenWidths[i]) {
-        setNumberOfColumns(i + 1);
+        setNumberOfColumns(i + minColumns);
         setMaxImageWidth(imageWidths[i]);
         break;
       }
       setNumberOfColumns(screenWidths.length - 1);
       setMaxImageWidth(screenWidths[screenWidths.length - 1]);
     }
-  }, [screenWidth, imageWidths, screenWidths]);
+  }, [screenWidth, imageWidths, screenWidths, minColumns]);
 
   //update the columns array on getting new photos or on changing the number of columns
   useEffect(() => {
@@ -53,7 +55,7 @@ export function ContainerGrid({
     }
   }, [photosArray, numberOfColumns, rowGap, maxImageWidth]);
 
-  //to ensure the blurhash gets the same width/height as the image (blurhash width/height are specified rigidly by javascript only)
+  //to ensure the blurhash doesn't exceed the image width at all times
   useEffect(() => {
     if (gridRef.current) {
       const newWidth = gridRef.current.clientWidth / columns.length - columnGap;

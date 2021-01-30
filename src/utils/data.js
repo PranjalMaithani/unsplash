@@ -5,7 +5,7 @@ const data = {
   IMAGE_WIDTH_1COLUMN: 760,
 
   //for the related images section on opening a modal
-  RELATED_WIDTH_3COLUMNS: 416,
+  RELATED_WIDTH_3COLUMNS: 376,
   RELATED_WIDTH_2COLUMNS: 463,
 
   //grid properties

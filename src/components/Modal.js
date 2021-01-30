@@ -1,10 +1,39 @@
 import styled from "styled-components";
 import ReactDOM from "react-dom";
-import { createModal, useClickOutside, useResize } from "../utils/lib";
-import { fetchPhotosSearch } from "../utils/fetchData";
-import { masonryColumns } from "../utils/masonry";
+import { fetchPhotosSearch, fetchPhotoTags } from "../utils/fetchData";
 import { useState, useEffect, useRef } from "react";
 import { ContainerGrid } from "./Grid";
+import data from "../utils/data";
+import { createModal, useClickOutside } from "../utils/lib";
+
+const screenWidths = [
+  data.TWO_COLUMNS_SCREEN_WIDTH,
+  data.THREE_COLUMNS_SCREEN_WIDTH,
+];
+
+const imageWidths = [data.RELATED_WIDTH_2COLUMNS, data.RELATED_WIDTH_3COLUMNS];
+
+const tagsToString = (tags, isLandingPage) => {
+  let string = "";
+
+  if (!isLandingPage) {
+    let count = 0;
+    for (const tag of tags) {
+      if (count < 3) {
+        string += tag.title + " ";
+        count++;
+      }
+    }
+    return string;
+  } else {
+    for (const tag of tags) {
+      if (tag.type && tag.type === "landing_page") {
+        string += tag.title + " ";
+      }
+    }
+    return string;
+  }
+};
 
 const ModalOuter = styled.div`
   width: 100vw;
@@ -27,10 +56,11 @@ const ModalInner = styled.div`
   outline: none;
   overflow-y: scroll;
   background-color: white;
-  height: 1500px;
+  height: auto;
   width: 75vw;
   margin-top: 30px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
 `;
 
@@ -72,19 +102,26 @@ export const Modal = ({ disableModal, image }) => {
   createModal(modalId);
 
   const [isLargeImage, setIsLargeImage] = useState(false);
-  // const [photosArray, setPhotoArray] = useState([]); //for related images in a modal
-  // const [columns, setColumns] = useState([]);
+  const [photosArray, setPhotoArray] = useState([]); //for related images in a modal
 
-  // let screenWidth = useResize(1000);
+  useEffect(() => {
+    const getPhotos = async (image) => {
+      let tagString;
+      let photos;
+      if (image.tags !== undefined) {
+        tagString = tagsToString(image.tags, false);
+        photos = await fetchPhotosSearch(1, tagString, false);
+      } else {
+        const tags = await fetchPhotoTags(image);
+        tagString = tagsToString(tags, true);
+        photos = await fetchPhotosSearch(1, tagString, true);
+      }
 
-  // useEffect(() => {
-  //   const getPhotos = async (searchText) => {
-  //     const photos = await fetchPhotosSearch(1, searchText);
-  //     setPhotoArray(photos);
-  //   };
+      setPhotoArray(photos);
+    };
 
-  //   getPhotos(image.description || image.alt_description);
-  // }, [image]);
+    getPhotos(image);
+  }, [image]);
 
   useEffect(() => {
     const cancelAllActions = (event) => {
@@ -114,6 +151,14 @@ export const Modal = ({ disableModal, image }) => {
             isLarge={isLargeImage}
           />
         </div>
+        <ContainerGrid
+          photosArray={photosArray}
+          screenWidths={screenWidths}
+          imageWidths={imageWidths}
+          minColumns={2}
+          rowGap={data.ROW_GAP}
+          columnGap={data.COLUMN_GAP}
+        />
       </ModalInner>
     </ModalOuter>,
     document.getElementById(modalId)

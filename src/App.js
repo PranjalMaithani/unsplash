@@ -38,7 +38,7 @@ function App() {
       if (searchText === "") {
         nextPhotos = await fetchPhotos(page);
       } else {
-        nextPhotos = await fetchPhotosSearch(page, searchText);
+        nextPhotos = await fetchPhotosSearch(page, searchText, false);
       }
       if (page === 1) {
         if (nextPhotos.length === 0) {
@@ -98,7 +98,6 @@ function App() {
           screenWidths={screenWidths}
           imageWidths={imageWidths}
           minColumns={1}
-          maxColumns={3}
           rowGap={data.ROW_GAP}
           columnGap={data.COLUMN_GAP}
         />
