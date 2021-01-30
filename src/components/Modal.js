@@ -1,19 +1,36 @@
 import styled from "styled-components";
 import ReactDOM from "react-dom";
 import { fetchPhotosSearch, fetchPhotoTags } from "../utils/fetchData";
-import { useState, useEffect, useRef } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useContext,
+  createContext,
+} from "react";
 import { ContainerGrid } from "./Grid";
 import data from "../utils/data";
 import { createModal, useClickOutside } from "../utils/lib";
+import { useScreenResize } from "../utils/handlers";
+
+export const ModalContext = createContext({
+  modalImage: {},
+  setModalImage: () => {},
+});
 
 const screenWidths = [
-  data.TWO_COLUMNS_SCREEN_WIDTH,
-  data.THREE_COLUMNS_SCREEN_WIDTH,
+  data.SCREEN_WIDTH_RELATED_2COLUMNS,
+  data.SCREEN_WIDTH_RELATED_3COLUMNS,
 ];
 
 const imageWidths = [data.RELATED_WIDTH_2COLUMNS, data.RELATED_WIDTH_3COLUMNS];
 
 const tagsToString = (tags, isLandingPage) => {
+  if (!tags) {
+    return "";
+  }
+
   let string = "";
 
   if (!isLandingPage) {
@@ -37,42 +54,48 @@ const tagsToString = (tags, isLandingPage) => {
 
 const ModalOuter = styled.div`
   width: 100vw;
-  height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 55;
-  overflow-y: auto;
+  overflow: auto;
   display: flex;
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.6);
+  cursor: zoom-out;
 `;
 
 const ModalInner = styled.div`
   border-radius: 3px;
   border-style: none;
   outline: none;
-  overflow-y: scroll;
   background-color: white;
-  height: auto;
-  width: 75vw;
+  width: ${(props) => (props.screenWidth > 865 ? "75vw" : "100vw")};
   margin-top: 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  overflow-y: auto;
+  cursor: auto;
+`;
+
+const Heading = styled.h3`
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: 400;
+  letter-spacing: 1px;
 `;
 
 const ImageZoomedOut = {
   padding: "10px 16px",
   margin: "0 auto",
+  textAlign: "center",
 };
 
 const ImageZoomedIn = {
-  padding: "0",
+  padding: "10px 0",
   margin: "0",
   overflow: "hidden",
+  height: "auto",
 };
 
 const ModalImage = ({ image, clickCallback, isLarge }) => {
@@ -82,7 +105,7 @@ const ModalImage = ({ image, clickCallback, isLarge }) => {
         src={image.urls.full}
         alt={image.alt_description}
         onClick={clickCallback}
-        style={{ width: "100%" }}
+        style={{ width: "100%", cursor: "zoom-out" }}
       />
     );
   } else {
@@ -91,18 +114,28 @@ const ModalImage = ({ image, clickCallback, isLarge }) => {
         src={image.urls.regular}
         alt={image.alt_description}
         onClick={clickCallback}
-        style={{ maxHeight: "80vh", width: "100%", minHeight: "333px" }}
+        style={{
+          maxHeight: "80vh",
+          minHeight: "333px",
+          cursor: "zoom-in",
+        }}
       />
     );
   }
 };
 
-export const Modal = ({ disableModal, image }) => {
+export const Modal = () => {
   const modalId = "modal-root";
   createModal(modalId);
 
+  const { modalImage, setModalImage } = useContext(ModalContext);
+
   const [isLargeImage, setIsLargeImage] = useState(false);
   const [photosArray, setPhotoArray] = useState([]); //for related images in a modal
+
+  const disableModal = useCallback(() => {
+    setModalImage(null);
+  }, [setModalImage]);
 
   useEffect(() => {
     const getPhotos = async (image) => {
@@ -120,8 +153,12 @@ export const Modal = ({ disableModal, image }) => {
       setPhotoArray(photos);
     };
 
-    getPhotos(image);
-  }, [image]);
+    if (modalImage) {
+      getPhotos(modalImage);
+    }
+    setPhotoArray([]);
+    setIsLargeImage(false);
+  }, [modalImage]);
 
   useEffect(() => {
     const cancelAllActions = (event) => {
@@ -138,19 +175,28 @@ export const Modal = ({ disableModal, image }) => {
 
   const imageModalRef = useRef();
   useClickOutside(imageModalRef, disableModal);
+  let [screenWidth] = useScreenResize(100);
+
+  if (!modalImage) {
+    document.body.style.overflow = "auto";
+    return null;
+  } else {
+    document.body.style.overflow = "hidden";
+  }
 
   return ReactDOM.createPortal(
     <ModalOuter>
-      <ModalInner ref={imageModalRef}>
+      <ModalInner ref={imageModalRef} screenWidth={screenWidth}>
         <div style={isLargeImage ? ImageZoomedIn : ImageZoomedOut}>
           <ModalImage
-            image={image}
+            image={modalImage}
             clickCallback={() => {
               setIsLargeImage(!isLargeImage);
             }}
             isLarge={isLargeImage}
           />
         </div>
+        <Heading>Related Images</Heading>
         <ContainerGrid
           photosArray={photosArray}
           screenWidths={screenWidths}

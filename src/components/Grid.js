@@ -1,6 +1,6 @@
 import { Image } from "./Image";
 import { useState, useRef, useEffect } from "react";
-import { useResize } from "../utils/handlers";
+import { useScreenResize } from "../utils/handlers";
 import { masonryColumns } from "../utils/masonry";
 
 export function ContainerGrid({
@@ -24,7 +24,7 @@ export function ContainerGrid({
   );
 
   const gridRef = useRef();
-  let screenWidth = useResize(100);
+  let [screenWidth] = useScreenResize(100);
 
   useEffect(() => {
     //setting the number of columns and image width depending on screen width
@@ -43,7 +43,7 @@ export function ContainerGrid({
 
   //update the columns array on getting new photos or on changing the number of columns
   useEffect(() => {
-    if (photosArray.length !== 0) {
+    if (photosArray && photosArray.length !== 0) {
       setColumns(
         masonryColumns({
           photosArray,
@@ -66,6 +66,10 @@ export function ContainerGrid({
       }
     }
   }, [columnGap, screenWidth, columns, maxImageWidth]);
+
+  if (photosArray === undefined || photosArray.length === 0) {
+    return null;
+  }
 
   return (
     <div className="grid" style={{ gap: columnGap }} ref={gridRef}>

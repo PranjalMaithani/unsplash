@@ -46,7 +46,6 @@ export const fetchPhotoTags = async (image) => {
       },
     });
     const result = await fetchedPhoto.json();
-    console.log(result);
     return result.tags;
   } catch (err) {
     alert("Failed to fetch photos");

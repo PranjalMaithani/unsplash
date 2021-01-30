@@ -13,7 +13,11 @@ export function useClickOutside(innerRef, callback) {
   useEffect(() => {
     const handleClickOutside = (event) => {
       event.stopPropagation();
-      if (innerRef.current && !innerRef.current.contains(event.target)) {
+      if (
+        innerRef.current &&
+        !innerRef.current.contains(event.target) &&
+        event.target.contains(innerRef.current)
+      ) {
         callback(event);
       }
     };
@@ -25,6 +29,9 @@ export function useClickOutside(innerRef, callback) {
 }
 
 export const removeDulpicateImages = (prevPhotos, nextPhotos) => {
+  if (!nextPhotos) {
+    return [];
+  }
   const filteredPhotos = nextPhotos.filter((current) => {
     return !prevPhotos.some((checkPhoto) => checkPhoto.id === current.id);
   });

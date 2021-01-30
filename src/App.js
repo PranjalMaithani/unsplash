@@ -2,6 +2,7 @@ import "./App.css";
 import React from "react";
 import { useInfiniteScroll } from "./utils";
 import { ContainerGrid } from "./components/Grid.js";
+import { Modal, ModalContext } from "./components/Modal.js";
 import ErrorMessage from "./components/ErrorMessage";
 import { fetchPhotos, fetchPhotosSearch } from "./utils/fetchData";
 import { removeDulpicateImages } from "./utils/lib";
@@ -11,9 +12,9 @@ import { GlobalStyle } from "./styles/Global";
 import data from "./utils/data";
 
 const screenWidths = [
-  data.ONE_COLUMN_SCREEN_WIDTH,
-  data.TWO_COLUMNS_SCREEN_WIDTH,
-  data.THREE_COLUMNS_SCREEN_WIDTH,
+  data.SCREEN_WIDTH_1COLUMN,
+  data.SCREEN_WIDTH_2COLUMNS,
+  data.SCREEN_WIDTH_3COLUMNS,
 ];
 
 const imageWidths = [
@@ -30,6 +31,13 @@ function App() {
   const [searchText, setSearchText] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState(null);
 
+  const [modalImage, setModalImage] = React.useState(null);
+
+  const modalContextValue = React.useMemo(
+    () => ({ modalImage, setModalImage }),
+    [modalImage]
+  );
+
   const infiniteLoadRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -41,7 +49,7 @@ function App() {
         nextPhotos = await fetchPhotosSearch(page, searchText, false);
       }
       if (page === 1) {
-        if (nextPhotos.length === 0) {
+        if (nextPhotos && nextPhotos.length === 0) {
           setErrorMessage("Couldn't find any photos");
           setPhotosArray([]);
           setPhotosArray([]);
@@ -82,30 +90,33 @@ function App() {
 
   return (
     <>
-      <Header
-        height={data.HEADER_HEIGHT}
-        resetData={resetData}
-        searchCallback={(value) => {
-          setPage(1);
-          setSearchText(value);
-        }}
-      />
-      <div style={{ height: data.HEADER_HEIGHT * 1.5 }}></div>
-      {errorMessage && <ErrorMessage message={errorMessage} />}
-      <div style={{ minHeight: errorMessage ? 100 : 1600 }}>
-        <ContainerGrid
-          photosArray={photosArray}
-          screenWidths={screenWidths}
-          imageWidths={imageWidths}
-          minColumns={1}
-          rowGap={data.ROW_GAP}
-          columnGap={data.COLUMN_GAP}
+      <ModalContext.Provider value={modalContextValue}>
+        <Header
+          height={data.HEADER_HEIGHT}
+          resetData={resetData}
+          searchCallback={(value) => {
+            setPage(1);
+            setSearchText(value);
+          }}
         />
-      </div>
+        <div style={{ height: data.HEADER_HEIGHT * 1.5 }}></div>
+        {errorMessage && <ErrorMessage message={errorMessage} />}
+        <div style={{ minHeight: errorMessage ? 100 : 1600 }}>
+          <ContainerGrid
+            photosArray={photosArray}
+            screenWidths={screenWidths}
+            imageWidths={imageWidths}
+            minColumns={1}
+            rowGap={data.ROW_GAP}
+            columnGap={data.COLUMN_GAP}
+          />
+        </div>
 
-      <div style={{ height: 10 }} ref={infiniteLoadRef}></div>
+        <Modal />
 
-      <GlobalStyle />
+        <div style={{ height: 10 }} ref={infiniteLoadRef}></div>
+        <GlobalStyle />
+      </ModalContext.Provider>
     </>
   );
 }

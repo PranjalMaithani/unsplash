@@ -5,20 +5,24 @@ export const handleKeyDown = (event, confirmAction, cancelAction) => {
   else if (event.key === "Enter") confirmAction(event);
 };
 
-export const useResize = (limit) => {
+export const useScreenResize = (limit) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+
   const [lastRan, setLastRan] = useState(0);
   const postExec = useRef(null);
 
   //to resize once after the user stops resizing
   const handleResizePost = useCallback(() => {
     setWindowWidth(window.innerWidth);
+    setWindowHeight(window.innerHeight);
   }, []);
 
   const handleResize = useCallback(() => {
     if (Date.now() - lastRan > limit) {
       setLastRan(Date.now());
       setWindowWidth(window.innerWidth);
+      setWindowHeight(window.innerHeight);
       clearTimeout(postExec.current);
       postExec.current = setTimeout(handleResizePost, limit);
     }
@@ -32,5 +36,5 @@ export const useResize = (limit) => {
     };
   }, [handleResize]);
 
-  return windowWidth;
+  return [windowWidth, windowHeight];
 };

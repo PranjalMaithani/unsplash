@@ -1,12 +1,12 @@
 import { useImageLazyLoad } from "../utils";
 import { resizedHeight } from "../utils/masonry.js";
 import { Blurhash } from "react-blurhash";
-import { useState } from "react";
-import { Modal } from "./Modal";
+import { ModalContext } from "./Modal";
+import { useContext } from "react";
 
 export function Image({ image, IMAGE_WIDTH }) {
   const [isVisible, imageRef] = useImageLazyLoad();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { setModalImage } = useContext(ModalContext);
 
   return (
     <div
@@ -15,10 +15,10 @@ export function Image({ image, IMAGE_WIDTH }) {
       style={{
         position: "relative",
         height: resizedHeight(image.width, image.height, IMAGE_WIDTH),
+        cursor: "zoom-in",
       }}
       onClick={() => {
-        setIsModalOpen(true);
-        document.body.style.overflow = "hidden";
+        setModalImage(image);
       }}
     >
       {isVisible && (
@@ -52,15 +52,6 @@ export function Image({ image, IMAGE_WIDTH }) {
         resolutionY={32}
         punch={1}
       />
-      {isModalOpen && (
-        <Modal
-          image={image}
-          disableModal={() => {
-            setIsModalOpen(false);
-            document.body.style.overflow = "auto";
-          }}
-        />
-      )}
     </div>
   );
 }

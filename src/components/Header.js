@@ -27,6 +27,7 @@ const Logo = styled.a`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `;
 
 const SearchBarDiv = styled.div`
@@ -61,6 +62,7 @@ const HeaderRightEnd = styled.div`
   font-weight: bold;
   letter-spacing: 15px;
   user-select: none;
+  cursor: pointer;
 `;
 
 const SearchButton = styled.button`
