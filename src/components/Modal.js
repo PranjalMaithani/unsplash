@@ -1,23 +1,11 @@
 import styled from "styled-components";
 import ReactDOM from "react-dom";
 import { fetchPhotosSearch, fetchPhotoTags } from "../utils/fetchData";
-import {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useContext,
-  createContext,
-} from "react";
+import { useState, useEffect, useRef } from "react";
 import { ContainerGrid } from "./Grid";
 import data from "../utils/data";
 import { createModal, useClickOutside } from "../utils/lib";
 import { useScreenResize } from "../utils/handlers";
-
-export const ModalContext = createContext({
-  modalImage: {},
-  setModalImage: () => {},
-});
 
 const screenWidths = [
   data.SCREEN_WIDTH_RELATED_2COLUMNS,
@@ -124,21 +112,15 @@ const ModalImage = ({ image, clickCallback, isLarge }) => {
   }
 };
 
-export const Modal = () => {
+const Modal = ({ image, disableModal }) => {
   const modalId = "modal-root";
   createModal(modalId);
-
-  const { modalImage, setModalImage } = useContext(ModalContext);
 
   const [isLargeImage, setIsLargeImage] = useState(false);
   const [photosArray, setPhotoArray] = useState([]); //for related images in a modal
 
-  const disableModal = useCallback(() => {
-    setModalImage(null);
-  }, [setModalImage]);
-
   useEffect(() => {
-    const getPhotos = async (image) => {
+    const getRelatedPhotos = async (image) => {
       let tagString;
       let photos;
       if (image.tags !== undefined) {
@@ -153,12 +135,12 @@ export const Modal = () => {
       setPhotoArray(photos);
     };
 
-    if (modalImage) {
-      getPhotos(modalImage);
+    if (image) {
+      getRelatedPhotos(image);
     }
     setPhotoArray([]);
     setIsLargeImage(false);
-  }, [modalImage]);
+  }, [image]);
 
   useEffect(() => {
     const cancelAllActions = (event) => {
@@ -177,7 +159,7 @@ export const Modal = () => {
   useClickOutside(imageModalRef, disableModal);
   let [screenWidth] = useScreenResize(100);
 
-  if (!modalImage) {
+  if (!image) {
     document.body.style.overflow = "auto";
     return null;
   } else {
@@ -189,7 +171,7 @@ export const Modal = () => {
       <ModalInner ref={imageModalRef} screenWidth={screenWidth}>
         <div style={isLargeImage ? ImageZoomedIn : ImageZoomedOut}>
           <ModalImage
-            image={modalImage}
+            image={image}
             clickCallback={() => {
               setIsLargeImage(!isLargeImage);
             }}
@@ -210,3 +192,5 @@ export const Modal = () => {
     document.getElementById(modalId)
   );
 };
+
+export default Modal;

@@ -2,7 +2,7 @@ import "./App.css";
 import React from "react";
 import { useInfiniteScroll } from "./utils";
 import { ContainerGrid } from "./components/Grid.js";
-import { Modal, ModalContext } from "./components/Modal.js";
+import { ModalProvider } from "./components/useModal.js";
 import ErrorMessage from "./components/ErrorMessage";
 import { fetchPhotos, fetchPhotosSearch } from "./utils/fetchData";
 import { removeDulpicateImages } from "./utils/lib";
@@ -90,18 +90,18 @@ function App() {
 
   return (
     <>
-      <ModalContext.Provider value={modalContextValue}>
-        <Header
-          height={data.HEADER_HEIGHT}
-          resetData={resetData}
-          searchCallback={(value) => {
-            setPage(1);
-            setSearchText(value);
-          }}
-        />
-        <div style={{ height: data.HEADER_HEIGHT * 1.5 }}></div>
-        {errorMessage && <ErrorMessage message={errorMessage} />}
-        <div style={{ minHeight: errorMessage ? 100 : 1600 }}>
+      <Header
+        height={data.HEADER_HEIGHT}
+        resetData={resetData}
+        searchCallback={(value) => {
+          setPage(1);
+          setSearchText(value);
+        }}
+      />
+      <div style={{ height: data.HEADER_HEIGHT * 1.5 }}></div>
+      {errorMessage && <ErrorMessage message={errorMessage} />}
+      <div style={{ minHeight: errorMessage ? 100 : 1600 }}>
+        <ModalProvider>
           <ContainerGrid
             photosArray={photosArray}
             screenWidths={screenWidths}
@@ -110,13 +110,11 @@ function App() {
             rowGap={data.ROW_GAP}
             columnGap={data.COLUMN_GAP}
           />
-        </div>
+        </ModalProvider>
+      </div>
 
-        <Modal />
-
-        <div style={{ height: 10 }} ref={infiniteLoadRef}></div>
-        <GlobalStyle />
-      </ModalContext.Provider>
+      <div style={{ height: 10 }} ref={infiniteLoadRef}></div>
+      <GlobalStyle />
     </>
   );
 }

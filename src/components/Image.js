@@ -1,12 +1,11 @@
 import { useImageLazyLoad } from "../utils";
 import { resizedHeight } from "../utils/masonry.js";
 import { Blurhash } from "react-blurhash";
-import { ModalContext } from "./Modal";
-import { useContext } from "react";
+import { useModal } from "./useModal";
 
 export function Image({ image, IMAGE_WIDTH }) {
   const [isVisible, imageRef] = useImageLazyLoad();
-  const { setModalImage } = useContext(ModalContext);
+  const modal = useModal();
 
   return (
     <div
@@ -18,7 +17,7 @@ export function Image({ image, IMAGE_WIDTH }) {
         cursor: "zoom-in",
       }}
       onClick={() => {
-        setModalImage(image);
+        modal.showImage(image);
       }}
     >
       {isVisible && (
