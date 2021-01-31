@@ -31,13 +31,6 @@ function App() {
   const [searchText, setSearchText] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState(null);
 
-  const [modalImage, setModalImage] = React.useState(null);
-
-  const modalContextValue = React.useMemo(
-    () => ({ modalImage, setModalImage }),
-    [modalImage]
-  );
-
   const infiniteLoadRef = React.useRef(null);
 
   React.useEffect(() => {
