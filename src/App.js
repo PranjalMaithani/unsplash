@@ -28,7 +28,7 @@ function App() {
 
   const [photosArray, setPhotosArray] = React.useState([]);
   const [page, setPage] = React.useState(1);
-  const [searchText, setSearchText] = React.useState("");
+  const [searchText, setSearchText] = React.useState(null);
   const [errorMessage, setErrorMessage] = React.useState(null);
 
   const infiniteLoadRef = React.useRef(null);
@@ -36,7 +36,7 @@ function App() {
   React.useEffect(() => {
     const getPhotos = async (searchText) => {
       let nextPhotos;
-      if (searchText === "") {
+      if (searchText === null) {
         nextPhotos = await fetchPhotos(page);
       } else {
         nextPhotos = await fetchPhotosSearch(page, searchText, false);
@@ -75,7 +75,7 @@ function App() {
   const resetData = React.useCallback(() => {
     setErrorMessage(null);
     setPhotosArray([]);
-    setSearchText("");
+    setSearchText(null);
     setPage(1);
   }, []);
 
