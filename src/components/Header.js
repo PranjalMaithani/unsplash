@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import colors from "../styles/colors";
+import data from "../utils/data";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -56,13 +57,20 @@ const SearchBarForm = styled.form`
   }
 `;
 
-const HeaderRightEnd = styled.div`
+const ProjectTitle = styled.a`
+  text-decoration: none;
+  color: black;
+
   margin-right: 30px;
   justify-self: flex-end;
   font-weight: bold;
   letter-spacing: 15px;
   user-select: none;
   cursor: pointer;
+
+  @media (max-width: ${data.FULL_MODAL_SCREEN_WIDTH}) {
+    display: none;
+  }
 `;
 
 const SearchButton = styled.button`
@@ -132,7 +140,13 @@ export const Header = ({ searchCallback, resetData }) => {
           />
         </SearchBarForm>
       </SearchBarDiv>
-      <HeaderRightEnd onClick={resetData}>ONSPLASH</HeaderRightEnd>
+      <ProjectTitle
+        href={"https://github.com/PranjalMaithani/unsplash"}
+        target="_blank"
+        rel="noreferrer noopener"
+      >
+        ONSPLASH
+      </ProjectTitle>
     </HeaderDiv>
   );
 };

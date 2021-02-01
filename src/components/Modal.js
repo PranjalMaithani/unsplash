@@ -1,11 +1,16 @@
 import styled from "styled-components";
 import ReactDOM from "react-dom";
+
 import { fetchPhotosSearch, fetchPhotoTags } from "../utils/fetchData";
 import { useState, useEffect, useRef } from "react";
 import { ContainerGrid } from "./Grid";
+import { CreditsHeader } from "./Credits";
 import data from "../utils/data";
 import { createModal, useClickOutside } from "../utils/lib";
-import { useScreenResize } from "../utils/handlers";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const screenWidths = [
   data.SCREEN_WIDTH_RELATED_2COLUMNS,
@@ -60,27 +65,56 @@ const ModalInner = styled.div`
   border-style: none;
   outline: none;
   background-color: white;
-  width: ${(props) => (props.screenWidth > 865 ? "75vw" : "100vw")};
+  width: 75vw;
   margin-top: 30px;
   overflow-y: auto;
   cursor: auto;
+
+  @media (max-width: ${data.FULL_MODAL_SCREEN_WIDTH}) {
+    width: 100vw;
+    height: 100vh;
+    margin-top: 0;
+  }
 `;
 
 const Heading = styled.h3`
-  font-size: 1.5rem;
-  text-align: center;
+  font-size: 1.2rem;
+  padding: 10px;
+  padding-left: 25px;
   font-weight: 400;
-  letter-spacing: 1px;
+`;
+
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  outline: none;
+
+  font-size: 1.3rem;
+  opacity: 0.8;
+  transition: 0.2s;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  cursor: pointer;
+
+  color: white;
+  @media (max-width: ${data.FULL_MODAL_SCREEN_WIDTH}) {
+    color: black;
+    opacity: 0.4;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
 `;
 
 const ImageZoomedOut = {
-  padding: "10px 16px",
+  padding: "0 16px",
   margin: "0 auto",
   textAlign: "center",
 };
 
 const ImageZoomedIn = {
-  padding: "10px 0",
   margin: "0",
   overflow: "hidden",
   height: "auto",
@@ -103,8 +137,8 @@ const ModalImage = ({ image, clickCallback, isLarge }) => {
         alt={image.alt_description}
         onClick={clickCallback}
         style={{
+          maxWidth: "100%",
           maxHeight: "80vh",
-          minHeight: "333px",
           cursor: "zoom-in",
         }}
       />
@@ -157,7 +191,6 @@ const Modal = ({ image, disableModal }) => {
 
   const imageModalRef = useRef();
   useClickOutside(imageModalRef, disableModal);
-  let [screenWidth] = useScreenResize(100);
 
   if (!image) {
     document.body.style.overflow = "auto";
@@ -168,7 +201,14 @@ const Modal = ({ image, disableModal }) => {
 
   return ReactDOM.createPortal(
     <ModalOuter>
-      <ModalInner ref={imageModalRef} screenWidth={screenWidth}>
+      <CloseButton
+        children={
+          <FontAwesomeIcon icon={faTimes} style={{ fontSize: "35px" }} />
+        }
+        onClick={disableModal}
+      />
+      <ModalInner ref={imageModalRef}>
+        <CreditsHeader image={image} />
         <div style={isLargeImage ? ImageZoomedIn : ImageZoomedOut}>
           <ModalImage
             image={image}

@@ -22,6 +22,8 @@ const data = {
   SCREEN_WIDTH_RELATED_2COLUMNS: 1000,
 
   HEADER_HEIGHT: 62,
+
+  FULL_MODAL_SCREEN_WIDTH: "865px",
 };
 
 export default data;
