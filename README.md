@@ -36,6 +36,7 @@ The masonry grid is reusable, and has been implemented in the related images sec
 ![Related images](https://i.imgur.com/0x23eR9.png)
 
 The masonry grid can additionaly be supplied with 2 arrays of screen widths and image widths. Whenever the screen width is below a particular threshold, the corresponding image width for it is loaded. Here 2 columns have a max width of 463px while the default 3 columns have it at 416px.
+A custom throttled screen resize event function handles this.
 
 ![2 columns masonry](https://i.imgur.com/mEolTky.png)
 
