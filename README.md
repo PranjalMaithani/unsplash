@@ -6,6 +6,8 @@ This is a clone of [Unsplash](https://unsplash.com/), and uses their api to fetc
 
 React has been used to build this.
 
+![Masonry Grid](https://i.imgur.com/QYmRASE.png)
+
 ## Features
 
 * Masonry grid to display any number of images
@@ -28,8 +30,6 @@ React has been used to build this.
 The masonry grid works by taking in as parameters the photos array, column width and number of columns.
 Each image is taken, using a formula, resized to the column width and then the resized image's height is stored.
 Then this image is added to the column of least height. This ensures the masonry layout flows nicely.
-
-![Masonry Grid](https://i.imgur.com/QYmRASE.png)
 
 The masonry grid is reusable, and has been implemented in the related images section too. Here the minimum number of columns is 2, instead of the default 1.
 
