@@ -9,7 +9,7 @@ React has been used to build this.
 ## Features
 
 * Masonry grid to display any number of images
-* Responsive to screen width masonry grid, displays 1-3 columns depending on the space there is
+* Responsive to screen width masonry grid, displays 1-3 columns depending on the space there is. A throttled screen resize function takes care of this.
 * Infinite scrolling
 * Lazy loading of images. Only load the image if the user has the image on screen, otherwise show a blurhash.
 * Blurhash placeholders while the image loads
