@@ -26,7 +26,7 @@ The masonry grid works by taking in as parameters the photos array, column width
 Each image is taken, using a formula, resized to the column width and then the resized image's height is stored.
 Then this image is added to the column of least height. This ensures the masonry layout flows nicely.
 
-![Masonry Grid](https://i.imgur.com/Kzo1JbM.png)
+![Masonry Grid](https://i.imgur.com/QYmRASE.png)
 
 The masonry grid is reusable, and has been implemented in the related images section too. Here the minimum number of columns is 2, instead of the default 1.
 
