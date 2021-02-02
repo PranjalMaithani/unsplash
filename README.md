@@ -1,70 +1,58 @@
-# Getting Started with Create React App
+# Unsplash Clone
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Check out the demo here : [Onsplash](https://onsplash-unsplash-clone.netlify.app/)
+This is a clone of [Unsplash](https://unsplash.com/), and uses their api to fetch photos. These are then displayed using a masonry grid.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+* Masonry grid to display any number of images
+* Responsive to screen width masonry grid, displays 1-3 columns depending on the space there is
+* Infinite scrolling
+* Lazy loading of images. Only load the image if the user has the image on screen, otherwise show a blurhash.
+* Blurhash placeholders while the image loads
+* Hover over an image to get an overlay on it
 
-### `npm start`
+* Click an image to open a modal which displays the full quality image on further clicking
+* The modal also shows a related images section, which has a masonry grid as well
+* Close the modal by clicking outside it, or the close button or by pressing 'escape'
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+* Search for specific images by typing in the search bar and submitting
+* Click the title to get to the github repository
+* Cick the logo on the upper-left corner to reset
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Masonry
 
-### `npm test`
+The masonry grid works by taking in as parameters the photos array, column width and number of columns.
+Each image is taken, using a formula, resized to the column width and then the resized image's height is stored.
+Then this image is added to the column of least height. This ensures the masonry layout flows nicely.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![Masonry Grid](https://i.imgur.com/Kzo1JbM.png)
 
-### `npm run build`
+The masonry grid is reusable, and has been implemented in the related images section too. Here the minimum number of columns is 2, instead of the default 1.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+![Related images](https://i.imgur.com/0x23eR9.png)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The masonry grid can additionaly be supplied with 2 arrays of screen widths and image widths. Whenever the screen width is below a particular threshold, the corresponding image width for it is loaded. Here 2 columns have a max width of 463px while the default 3 columns have it at 416px.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+![2 columns masonry](https://i.imgur.com/mEolTky.png)
 
-### `npm run eject`
+![1 column masonry](https://i.imgur.com/yd3Wqyl.png)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Modal
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Click an image to open a modal. It can be closed by clicking outside, or the close button, or by pressing the 'escape' key.
+On the top is the photographer's avatar and name, linked to their unsplash profile. It also has a related images section below, which implements a masonry layout as well.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+![Modal](https://i.imgur.com/lT1sess.png)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Search
 
-## Learn More
+Search for specific images by typing in the search bar. Go back to the default page by clicking the logo in the upper-left corner.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+![Search Results](https://i.imgur.com/tC6uEOs.png)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Blurhash
 
-### Code Splitting
+A blurhash is displayed while the image loads.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+![Blurhash](https://i.imgur.com/NutJa5e.png)
