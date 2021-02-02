@@ -1,7 +1,10 @@
 # Unsplash Clone
 
-Check out the demo here : [Onsplash](https://onsplash-unsplash-clone.netlify.app/)
+Check out the demo here : [Onsplash](https://onsplash-unsplash-clone.netlify.app/).
+
 This is a clone of [Unsplash](https://unsplash.com/), and uses their api to fetch photos. These are then displayed using a masonry grid.
+
+React has been used to build this.
 
 ## Features
 
