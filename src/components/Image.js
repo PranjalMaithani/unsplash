@@ -6,6 +6,8 @@ import { useModal } from "./useModal";
 import { CreditsImage } from "./Credits";
 import Vignette from "./Vignette";
 
+import ErrorBoundary from "./ErrorBoundaryImage";
+
 export function Image({ image, IMAGE_WIDTH }) {
   const [isVisible, imageRef] = useImageLazyLoad();
   const modal = useModal();
@@ -38,23 +40,25 @@ export function Image({ image, IMAGE_WIDTH }) {
           alt={image.description || image.alt_description}
         />
       )}
-      <Blurhash
-        alt={image.description || image.alt_description}
-        hash={image.blur_hash}
-        className="unsplashImage blurHash"
-        style={{
-          width: "100%",
-          maxWidth: IMAGE_WIDTH,
-          position: "absolute",
-          left: 0,
-          top: 0,
-          zIndex: 2,
-        }}
-        height={resizedHeight(image.width, image.height, IMAGE_WIDTH)}
-        resolutionX={32}
-        resolutionY={32}
-        punch={1}
-      />
+      <ErrorBoundary>
+        <Blurhash
+          alt={image.description || image.alt_description}
+          hash={image.blur_hash}
+          className="unsplashImage blurHash"
+          style={{
+            width: "100%",
+            maxWidth: IMAGE_WIDTH,
+            position: "absolute",
+            left: 0,
+            top: 0,
+            zIndex: 2,
+          }}
+          height={resizedHeight(image.width, image.height, IMAGE_WIDTH)}
+          resolutionX={32}
+          resolutionY={32}
+          punch={1}
+        />
+      </ErrorBoundary>
     </div>
   );
 }
