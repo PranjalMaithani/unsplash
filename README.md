@@ -3,6 +3,7 @@
 Check out the demo here : [Onsplash](https://onsplash-unsplash-clone.netlify.app/).
 
 This is a clone of [Unsplash](https://unsplash.com/), and uses their api to fetch photos. These are then displayed using a masonry grid.
+Being a demo project, requests are limited to **50 requests per hour.** If you see the **failed to fetch photos error**, it's most likely due to the requests being all used up. **Please wait an hour or two and try again.**
 
 React has been used to build this.
 
@@ -10,20 +11,20 @@ React has been used to build this.
 
 ## Features
 
-* Masonry grid to display any number of images
-* Responsive to screen width masonry grid, displays 1-3 columns depending on the space there is. A throttled screen resize function takes care of this.
-* Infinite scrolling
-* Lazy loading of images. Only load the image if the user has the image on screen, otherwise show a blurhash.
-* Blurhash placeholders while the image loads
-* Hover over an image to get an overlay on it
+-   Masonry grid to display any number of images
+-   Responsive to screen width masonry grid, displays 1-3 columns depending on the space there is. A throttled screen resize function takes care of this.
+-   Infinite scrolling
+-   Lazy loading of images. Only load the image if the user has the image on screen, otherwise show a blurhash.
+-   Blurhash placeholders while the image loads
+-   Hover over an image to get an overlay on it
 
-* Click an image to open a modal which displays the full quality image on further clicking
-* The modal also shows a related images section, which has a masonry grid as well
-* Close the modal by clicking outside it, or the close button or by pressing 'escape'
+-   Click an image to open a modal which displays the full quality image on further clicking
+-   The modal also shows a related images section, which has a masonry grid as well
+-   Close the modal by clicking outside it, or the close button or by pressing 'escape'
 
-* Search for specific images by typing in the search bar and submitting
-* Click the title to get to the github repository
-* Cick the logo on the upper-left corner to reset
+-   Search for specific images by typing in the search bar and submitting
+-   Click the title to get to the github repository
+-   Cick the logo on the upper-left corner to reset
 
 ## Masonry
 
