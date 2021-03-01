@@ -28,7 +28,7 @@ export function Image({ image, IMAGE_WIDTH }) {
 			<Vignette>{<CreditsImage image={image} />}</Vignette>
 			{isVisible && (
 				<img
-					src={image.urls.regular}
+					src={image.urls.raw + '&w=416'}
 					className="unsplashImage"
 					style={{
 						maxWidth: IMAGE_WIDTH,
